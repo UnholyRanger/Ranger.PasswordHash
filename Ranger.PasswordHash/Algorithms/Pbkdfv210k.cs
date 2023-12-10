@@ -1,11 +1,14 @@
-﻿namespace Ranger.PasswordHash
+﻿namespace Ranger.PasswordHash.Algorithms
 {
-	public class Pbkdfv210k : Pbkdfv2Base
-	{
-		public override string AlgorithmId => @"PBKDFv2-10k";
+    /// <summary>
+    /// A hashing function for the PBKDF V2 with 10,000 iterations.
+    /// </summary>
+    public class Pbkdfv210k : Pbkdfv2Base
+    {
+        /// <inheritdoc/>
+        public override string Id => @"PBKDFv2-10k";
 
-		public override bool IsObsolete { get; set; } = false;
-
-		protected override int IterationCount => 10000;
-	}
+        /// <inheritdoc/>
+        internal override int IterationCount => 10000;
+    }
 }

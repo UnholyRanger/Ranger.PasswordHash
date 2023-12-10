@@ -1,11 +1,25 @@
 ﻿namespace Ranger.PasswordHash
 {
-	public class PasswordHashRequest
-	{
-		public string AlgorithmId { get; set; }
+    /// <summary>
+    /// A model used for making a hashing request.
+    /// </summary>
+    public record PasswordHashRequest
+    {
+        /// <summary>
+        /// Gets the ID of the algorithm to use for the hashing. If no
+        /// value is supplied, the Preferred algorithm will be used.
+        /// </summary>
+        public string? AlgorithmId { get; init; }
 
-		public string Password { get; set; }
+        /// <summary>
+        /// Gets the password that will be hashed.
+        /// </summary>
+        public string Password { get; init; } = string.Empty;
 
-		public Salt Salt { get; set; }
-	}
+        /// <summary>
+        /// Gets the salt that will be used to hash the password. If no salt is supplied in the request,
+        /// the system will generate one through the <see cref="IPasswordSaltGenerator"/>.
+        /// </summary>
+        public Salt? Salt { get; init; }
+    }
 }
