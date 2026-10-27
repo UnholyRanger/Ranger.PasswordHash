@@ -30,11 +30,12 @@ namespace Ranger.PasswordHash
                 return services;
 
             if (configuration.PreferedAlgorithm is null)
-                configuration.SetPrefferedAlgorithm<PbkdfV2610k>();
+                configuration.SetPrefferedAlgorithm<PbkdfV2Sha256600k>();
 
             return services
                 .AddSingleton<IPasswordHashAlgorithm, Pbkdfv210k>()
                 .AddSingleton<IPasswordHashAlgorithm, PbkdfV2610k>()
+                .AddSingleton<IPasswordHashAlgorithm, PbkdfV2Sha256600k>()
             ;
         }
     }

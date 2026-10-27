@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `IPasswordHash.Verify(password, hash, salt, algorithmId)`, which compares hashes in fixed
   time and returns a `PasswordVerifyResult`: `Failed`, `Success` or `SuccessRehashNeeded`.
+- `PBKDFv2-SHA256-600k` algorithm (HMAC-SHA256, 600,000 iterations, 32 byte hash), following
+  the OWASP password storage recommendation.
 
 ### Changed
 
@@ -26,6 +28,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** `Salt.ToString()` now returns base64. The `Salt(string)` constructor and the
   implicit `string` conversions are removed. Use `Salt.FromBase64` and `ToBase64()` to store
   salts, or `Salt.FromText` to load salts that were stored as plain text in version 2.
+
+- `PBKDFv2-SHA256-600k` is now the default preferred algorithm. With the default configuration,
+  existing `PBKDFv2-10k` and `PBKDFv2-610k` hashes are reported as obsolete so they are upgraded
+  the next time each user signs in. Both algorithms still produce the same hashes as before.
+- Resolving `IPasswordHash` now throws a `PasswordHashException` if the preferred algorithm is
+  not registered, instead of failing later when hashing.
 
 ### Fixed
 

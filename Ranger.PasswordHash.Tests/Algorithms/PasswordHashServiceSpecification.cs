@@ -165,7 +165,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
             
         }
 
-        [Fact(DisplayName = "GIVEN no algorithms are configured AND a preffered alrogithm is set WHEN requesting a hash THEN expect an exception to be thrown.")]
+        [Fact(DisplayName = "GIVEN no algorithms are configured AND a preferred algorithm is set WHEN creating the service THEN expect an exception to be thrown.")]
         public void Given_NoAlgorithms_HasPreferred_Expect_Exception()
         {
             // GIVEN a default configuration
@@ -177,15 +177,12 @@ namespace Ranger.PasswordHash.Tests.Algorithms
             // AND no registered algorithms
             var algorithms = Array.Empty<IPasswordHashAlgorithm>();
 
-            var serviceUnderTest = GetTestService(configuration, algorithms);
+            // WHEN creating the service
+            var action = () => GetTestService(configuration, algorithms);
 
-            // WHEN requesting a hash
-            var action = () => serviceUnderTest.Hash(new PasswordHashRequest());
-
-            // THEN an exception should be thrown
-            var exception = action.Should().Throw<PasswordHashException>()
-                .WithMessage("You need to register a preferred algorithm to be used when no algorithms are specifically requested.");
-
+            // THEN an exception should be thrown naming the missing algorithm
+            action.Should().Throw<PasswordHashException>()
+                .WithMessage("The preferred algorithm (Pbkdfv210k) is not registered.*");
         }
 
         // Known PBKDFv2-10k vector, see PbkdfV2_10kSpecification

@@ -17,6 +17,17 @@ namespace Ranger.PasswordHash.Algorithms
         /// </summary>
         internal abstract int IterationCount { get; }
 
+        /// <summary>
+        /// Gets the HMAC hash function used by the PBKDF function. Defaults to SHA1,
+        /// which matches the hashes produced by earlier versions of this library.
+        /// </summary>
+        internal virtual HashAlgorithmName HashAlgorithm => HashAlgorithmName.SHA1;
+
+        /// <summary>
+        /// Gets the number of bytes in the derived hash.
+        /// </summary>
+        internal virtual int HashLength => 20;
+
         /// <inheritdoc/>
         public PasswordHashResult Hash(PasswordHashRequest request)
             => PerformHash(request);
@@ -31,9 +42,7 @@ namespace Ranger.PasswordHash.Algorithms
         {
             try
             {
-                // SHA1 and a 20 byte output match the legacy Rfc2898DeriveBytes defaults,
-                // so hashes produced by earlier versions still verify.
-                var hash = Rfc2898DeriveBytes.Pbkdf2(request.Password.ConvertToBytes(), request.Salt!.Value, IterationCount, HashAlgorithmName.SHA1, 20);
+                var hash = Rfc2898DeriveBytes.Pbkdf2(request.Password.ConvertToBytes(), request.Salt!.Value, IterationCount, HashAlgorithm, HashLength);
                 return new PasswordHashResult
                 {
                     AlgorithmId = Id,

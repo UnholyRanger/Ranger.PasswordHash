@@ -24,6 +24,9 @@ namespace Ranger.PasswordHash
             _configuration = configuration;
             _saltGenerator = saltGenerator;
             _algorithms = algorithms.ToArray();
+
+            if (_configuration.PreferedAlgorithm is not null && GetPrefferedAlgorithm() is null)
+                throw new PasswordHashException($"The preferred algorithm ({_configuration.PreferedAlgorithm.Name}) is not registered. Register it with {nameof(IPasswordHashConfiguration.RegisterAlgorithm)}.");
         }
 
         /// <inheritdoc/>
