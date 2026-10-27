@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   time and returns a `PasswordVerifyResult`: `Failed`, `Success` or `SuccessRehashNeeded`.
 - `PBKDFv2-SHA256-600k` algorithm (HMAC-SHA256, 600,000 iterations, 32 byte hash), following
   the OWASP password storage recommendation.
+- The NuGet package now includes the README, XML documentation and a symbol package with
+  Source Link.
+- An upgrade guide from 2.x in the README.
 
 ### Changed
 
@@ -28,7 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** `Salt.ToString()` now returns base64. The `Salt(string)` constructor and the
   implicit `string` conversions are removed. Use `Salt.FromBase64` and `ToBase64()` to store
   salts, or `Salt.FromText` to load salts that were stored as plain text in version 2.
-
 - `PBKDFv2-SHA256-600k` is now the default preferred algorithm. With the default configuration,
   existing `PBKDFv2-10k` and `PBKDFv2-610k` hashes are reported as obsolete so they are upgraded
   the next time each user signs in. Both algorithms still produce the same hashes as before.
@@ -44,6 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   stored that way could not be loaded back, so the password would never validate.
 - `UseOnlyExternalAlgorithms()` skipped registering the default salt generator, so resolving
   `IPasswordHash` threw unless a custom generator was registered.
+- README examples referenced members that don't exist (`IsObSolete`, `PasswordException`),
+  used `async void`, and stored a salt that had just been set to `null`.
 
 ## [2.0.0] - 2023-12-09
 
