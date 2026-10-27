@@ -1,6 +1,7 @@
-﻿using Ranger.PasswordHash.Core;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace Ranger.PasswordHash
 {
@@ -23,6 +24,9 @@ namespace Ranger.PasswordHash
             _configuration = configuration;
             _saltGenerator = saltGenerator;
             _algorithms = algorithms.ToArray();
+
+            if (_configuration.PreferredAlgorithm is not null && GetPreferredAlgorithm() is null)
+                throw new PasswordHashException($"The preferred algorithm ({_configuration.PreferredAlgorithm.Name}) is not registered. Register it with {nameof(IPasswordHashConfiguration.RegisterAlgorithm)}.");
         }
 
         /// <inheritdoc/>
@@ -44,9 +48,22 @@ namespace Ranger.PasswordHash
                 hashResult.Salt = request.Salt;
             }
 
-            hashResult.IsObsolete = GetPrefferedAlgorithm() is not null && GetPrefferedAlgorithm() != algorithm;
+            hashResult.IsObsolete = GetPreferredAlgorithm() is not null && GetPreferredAlgorithm() != algorithm;
 
             return hashResult;
+        }
+
+        /// <inheritdoc/>
+        public PasswordVerifyResult Verify(string password, string hash, Salt salt, string algorithmId)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(algorithmId);
+
+            var result = Hash(new PasswordHashRequest { AlgorithmId = algorithmId, Password = password, Salt = salt });
+
+            if (!CryptographicOperations.FixedTimeEquals(result.Value.ConvertToBytes(), hash.ConvertToBytes()))
+                return PasswordVerifyResult.Failed;
+
+            return result.IsObsolete ? PasswordVerifyResult.SuccessRehashNeeded : PasswordVerifyResult.Success;
         }
 
         private IPasswordHashAlgorithm? RetrieveAlgorithm(string? algorithmId)
@@ -54,11 +71,11 @@ namespace Ranger.PasswordHash
             if (!string.IsNullOrWhiteSpace(algorithmId))
                 return _algorithms.FirstOrDefault(a => a.Id == algorithmId);
 
-            return GetPrefferedAlgorithm()
+            return GetPreferredAlgorithm()
                 ?? throw new PasswordHashException($"You need to register a preferred algorithm to be used when no algorithms are specifically requested.");
         }
 
-        private IPasswordHashAlgorithm? GetPrefferedAlgorithm()
-            => _preferredAlgorithm ??= _algorithms.FirstOrDefault(a => a.GetType() == _configuration.PreferedAlgorithm);
+        private IPasswordHashAlgorithm? GetPreferredAlgorithm()
+            => _preferredAlgorithm ??= _algorithms.FirstOrDefault(a => a.GetType() == _configuration.PreferredAlgorithm);
     }
 }

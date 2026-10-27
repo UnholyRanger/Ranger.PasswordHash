@@ -7,10 +7,10 @@
     public class PasswordHashResult : IPasswordHashResult
     {
         /// <inheritdoc/>
-        public string AlgorithmId { get; set; } = string.Empty;
+        public string AlgorithmId { get; init; } = string.Empty;
 
         /// <inheritdoc/>
-        public string Value { get; set; } = string.Empty;
+        public string Value { get; init; } = string.Empty;
 
         /// <inheritdoc/>
         public Salt Salt { get; internal set; } = default!;

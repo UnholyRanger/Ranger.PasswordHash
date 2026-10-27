@@ -25,7 +25,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
 			var request = new PasswordHashRequest
 			{
 				Password = string.Empty,
-				Salt = new string('s', 8)
+				Salt = Salt.FromText(new string('s', 8))
 			};
 
 			// WHEN hashing
@@ -49,7 +49,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
 			var request = new PasswordHashRequest
 			{
 				Password = value,
-				Salt = salt,
+				Salt = Salt.FromText(salt),
 			};
 
 			// WHEN hashing

@@ -1,7 +1,7 @@
 ﻿namespace Ranger.PasswordHash
 {
     /// <summary>
-    /// An interface for password hashing algoritms that
+    /// An interface for password hashing algorithms that
     /// can be used by the <see cref="IPasswordHash"/>.
     /// </summary>
     public interface IPasswordHashAlgorithm

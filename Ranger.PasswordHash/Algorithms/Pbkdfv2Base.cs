@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace Ranger.PasswordHash
+namespace Ranger.PasswordHash.Algorithms
 {
     /// <summary>
     /// A base implementation of the PBKDFv2 hashing algorithm.
@@ -17,6 +17,17 @@ namespace Ranger.PasswordHash
         /// </summary>
         internal abstract int IterationCount { get; }
 
+        /// <summary>
+        /// Gets the HMAC hash function used by the PBKDF function. Defaults to SHA1,
+        /// which matches the hashes produced by earlier versions of this library.
+        /// </summary>
+        internal virtual HashAlgorithmName HashAlgorithm => HashAlgorithmName.SHA1;
+
+        /// <summary>
+        /// Gets the number of bytes in the derived hash.
+        /// </summary>
+        internal virtual int HashLength => 20;
+
         /// <inheritdoc/>
         public PasswordHashResult Hash(PasswordHashRequest request)
             => PerformHash(request);
@@ -24,21 +35,19 @@ namespace Ranger.PasswordHash
         /// <summary>
         /// Performs the RFC 2898 (PBKDFv2) hashing function.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        /// <exception cref="PasswordHashException"></exception>
+        /// <param name="request">The password and salt to hash.</param>
+        /// <returns>The hash result.</returns>
+        /// <exception cref="PasswordHashException">The hash could not be computed.</exception>
         protected PasswordHashResult PerformHash(PasswordHashRequest request)
         {
             try
             {
-                using (var hasher = new Rfc2898DeriveBytes(request.Password.ConvertToBytes(), request.Salt.Value, IterationCount))
+                var hash = Rfc2898DeriveBytes.Pbkdf2(request.Password.ConvertToBytes(), request.Salt!.Value, IterationCount, HashAlgorithm, HashLength);
+                return new PasswordHashResult
                 {
-                    return new PasswordHashResult
-                    {
-                        AlgorithmId = Id,
-                        Value = Convert.ToBase64String(hasher.GetBytes(20)),
-                    };
-                }
+                    AlgorithmId = Id,
+                    Value = Convert.ToBase64String(hash),
+                };
             }
             catch (Exception e)
             {

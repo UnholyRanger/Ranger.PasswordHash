@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace Ranger.PasswordHash.Core
+namespace Ranger.PasswordHash
 {
     internal class PasswordSaltGenerator : IPasswordSaltGenerator
     {
