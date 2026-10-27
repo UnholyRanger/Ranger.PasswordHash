@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Ranger.PasswordHash.Algorithms;
 
-namespace Ranger.PasswordHash.Core
+namespace Ranger.PasswordHash
 {
     public static class PasswordHashServiceCollectionExtensions
     {

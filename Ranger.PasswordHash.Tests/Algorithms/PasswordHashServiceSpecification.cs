@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
 using Ranger.PasswordHash.Algorithms;
-using Ranger.PasswordHash.Core;
 using Ranger.PasswordHash.Tests.TestAlgorithms;
 using System;
 using System.Collections.Generic;

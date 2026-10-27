@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Ranger.PasswordHash.Core
+namespace Ranger.PasswordHash
 {
     /// <summary>
     /// Hash configuration builder.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace Ranger.PasswordHash
+namespace Ranger.PasswordHash.Algorithms
 {
     /// <summary>
     /// A base implementation of the PBKDFv2 hashing algorithm.
@@ -31,14 +31,14 @@ namespace Ranger.PasswordHash
         {
             try
             {
-                using (var hasher = new Rfc2898DeriveBytes(request.Password.ConvertToBytes(), request.Salt.Value, IterationCount))
+                // SHA1 and a 20 byte output match the legacy Rfc2898DeriveBytes defaults,
+                // so hashes produced by earlier versions still verify.
+                var hash = Rfc2898DeriveBytes.Pbkdf2(request.Password.ConvertToBytes(), request.Salt!.Value, IterationCount, HashAlgorithmName.SHA1, 20);
+                return new PasswordHashResult
                 {
-                    return new PasswordHashResult
-                    {
-                        AlgorithmId = Id,
-                        Value = Convert.ToBase64String(hasher.GetBytes(20)),
-                    };
-                }
+                    AlgorithmId = Id,
+                    Value = Convert.ToBase64String(hash),
+                };
             }
             catch (Exception e)
             {

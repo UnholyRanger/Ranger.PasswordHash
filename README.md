@@ -8,7 +8,7 @@ This, is version 2.0 of that. More versatile, and open for additions. It's mainl
 
 Built with:
 
-- [Dotnet 6/8](https://dotnet.microsoft.com/en-us/download/dotnet)
+- [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet)
 
 ## Code Examples
 
@@ -110,4 +110,4 @@ I hope this library is helpful and I'm open to other ideas. Feel free to fork an
 
 ## License
 
-MIT
+MIT No Attribution (MIT-0). See [LICENSE](LICENSE).

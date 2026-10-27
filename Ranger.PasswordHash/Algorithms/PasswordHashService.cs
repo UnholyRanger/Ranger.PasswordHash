@@ -1,5 +1,4 @@
-﻿using Ranger.PasswordHash.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Ranger.PasswordHash

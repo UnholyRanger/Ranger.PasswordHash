@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Ranger.PasswordHash.Algorithms;
-using Ranger.PasswordHash.Core;
 using Xunit;
 
 namespace Ranger.PasswordHash.Tests.Algorithms
