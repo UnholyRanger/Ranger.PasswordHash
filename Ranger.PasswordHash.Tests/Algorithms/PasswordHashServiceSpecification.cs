@@ -38,7 +38,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
 
             // WHEN requesting a hash with a specific ID
             const string id = $"Hash_3";
-            var request = new PasswordHashRequest() { AlgorithmId = id, Salt = new Salt(string.Empty) };
+            var request = new PasswordHashRequest() { AlgorithmId = id, Salt = Salt.FromText(string.Empty) };
 
             var result = serviceUnderTest.Hash(request);
 

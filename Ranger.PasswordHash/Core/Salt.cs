@@ -1,54 +1,66 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Ranger.PasswordHash
 {
-    /// <summary>
-    /// A model for working with Hash salts simple.
-    /// </summary>
-    public class Salt
+	/// <summary>
+	/// A model for working with Hash salts simple.
+	/// </summary>
+	/// <remarks>
+	/// Store salts with <see cref="ToBase64"/> and load them with <see cref="FromBase64(string)"/>.
+	/// Salts are random bytes, so they cannot safely round trip through a plain text encoding.
+	/// </remarks>
+	public class Salt
 	{
 		/// <summary>
-		/// Gets the salt value as a <see cref="byte[]"/>.
+		/// Gets the salt value as a <see cref="byte"/> array.
 		/// </summary>
-		public byte[] Value { get; private set; }
+		public byte[] Value { get; }
 
 		/// <summary>
-		/// Consturcts a <see cref="Salt"/> from a <see cref="string"/> value.
+		/// Constructs a <see cref="Salt"/> from a <see cref="byte"/> array value.
 		/// </summary>
-		/// <param name="salt"></param>
-		public Salt(string salt)
-			=> Value = salt.ConvertToBytes();
-
-		/// <summary>
-		/// Constructs a <see cref="Salt"/> from a <see cref="byte[]"/> value.
-		/// </summary>
-		/// <param name="salt"></param>
+		/// <param name="salt">The salt bytes.</param>
 		public Salt(byte[] salt)
 			=> Value = salt.ToArray();
 
-		/// <inheritdoc/>
-		public override string ToString()
-			=> Value.ConvertToString();
+		/// <summary>
+		/// Constructs a <see cref="Salt"/> from a base64 string, such as one produced by <see cref="ToBase64"/>.
+		/// </summary>
+		/// <param name="value">The base64 encoded salt.</param>
+		/// <returns>The decoded salt.</returns>
+		/// <exception cref="FormatException">The value is not valid base64.</exception>
+		public static Salt FromBase64(string value)
+			=> new(Convert.FromBase64String(value));
 
 		/// <summary>
-		/// Implicitly converts a string to a <see cref="Salt"/>.
+		/// Constructs a <see cref="Salt"/> from the UTF-8 bytes of a text value. Use this for
+		/// salts that were stored as plain text, such as those used with version 2 of this library.
 		/// </summary>
-		/// <param name="value"></param>
-		public static implicit operator Salt(string value)
-            => new(value);
+		/// <param name="value">The salt text.</param>
+		/// <returns>The salt.</returns>
+		public static Salt FromText(string value)
+			=> new(value.ConvertToBytes());
 
-        /// <summary>
-        /// Implicitly converts a <see cref="byte[]"/> to a <see cref="Salt"/>.
-        /// </summary>
-        /// <param name="value"></param>
-        public static implicit operator Salt(byte[] value)
+		/// <summary>
+		/// Gets the salt as a base64 string, suitable for storing.
+		/// </summary>
+		/// <returns>The base64 encoded salt.</returns>
+		public string ToBase64()
+			=> Value.ConvertTobase64();
+
+		/// <summary>
+		/// Gets the salt as a base64 string. Equivalent to <see cref="ToBase64"/>.
+		/// </summary>
+		/// <returns>The base64 encoded salt.</returns>
+		public override string ToString()
+			=> ToBase64();
+
+		/// <summary>
+		/// Implicitly converts a <see cref="byte"/> array to a <see cref="Salt"/>.
+		/// </summary>
+		/// <param name="value">The salt bytes.</param>
+		public static implicit operator Salt(byte[] value)
 			=> new(value);
-
-        /// <summary>
-        /// Implicitly converts a <see cref="Salt"/> to a <see cref="string"/>.
-        /// </summary>
-        /// <param name="value"></param>
-        public static implicit operator string(Salt salt)
-			=> salt.ToString();
 	}
 }

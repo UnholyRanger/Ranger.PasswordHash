@@ -18,6 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated `Microsoft.Extensions.DependencyInjection.Abstractions` to 10.0.0.
 - PBKDFv2 hashing now uses `Rfc2898DeriveBytes.Pbkdf2`. Output is unchanged, so existing
   stored hashes continue to validate.
+- **Breaking:** `Salt.ToString()` now returns base64. The `Salt(string)` constructor and the
+  implicit `string` conversions are removed. Use `Salt.FromBase64` and `ToBase64()` to store
+  salts, or `Salt.FromText` to load salts that were stored as plain text in version 2.
+
+### Fixed
+
+- Generated salts were converted to text as UTF-8, which corrupts random bytes. A salt
+  stored that way could not be loaded back, so the password would never validate.
 
 ## [2.0.0] - 2023-12-09
 
