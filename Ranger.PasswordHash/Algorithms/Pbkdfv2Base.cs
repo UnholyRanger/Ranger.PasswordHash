@@ -35,9 +35,9 @@ namespace Ranger.PasswordHash.Algorithms
         /// <summary>
         /// Performs the RFC 2898 (PBKDFv2) hashing function.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        /// <exception cref="PasswordHashException"></exception>
+        /// <param name="request">The password and salt to hash.</param>
+        /// <returns>The hash result.</returns>
+        /// <exception cref="PasswordHashException">The hash could not be computed.</exception>
         protected PasswordHashResult PerformHash(PasswordHashRequest request)
         {
             try

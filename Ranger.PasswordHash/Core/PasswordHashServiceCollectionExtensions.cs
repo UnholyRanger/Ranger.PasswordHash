@@ -5,6 +5,9 @@ using Ranger.PasswordHash.Algorithms;
 
 namespace Ranger.PasswordHash
 {
+    /// <summary>
+    /// Extensions for registering password hashing with an <see cref="IServiceCollection"/>.
+    /// </summary>
     public static class PasswordHashServiceCollectionExtensions
     {
         /// <summary>
@@ -12,9 +15,9 @@ namespace Ranger.PasswordHash
         /// in dynamically hashing passwords. Use the options action to register any custom algorithms
         /// and override the default preferred algorithm.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
+        /// <param name="services">The service collection to add to.</param>
+        /// <param name="options">Optional configuration for registering algorithms and choosing the preferred one.</param>
+        /// <returns>The service collection, for chaining.</returns>
         public static IServiceCollection AddDynamicPasswordHashing(this IServiceCollection services, Action<IPasswordHashConfiguration>? options = null)
         {
             var configuration = new PasswordHashConfiguration(services);

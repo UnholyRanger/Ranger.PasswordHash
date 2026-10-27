@@ -9,7 +9,7 @@
         /// <summary>
         /// Generates a <see cref="Salt"/>.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A new random salt.</returns>
         Salt Generate();
     }
 }

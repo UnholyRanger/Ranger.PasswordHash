@@ -10,8 +10,8 @@
         /// provided. If a <see cref="PasswordHashRequest.AlgorithmId"/> is provided, that
         /// hashing function will be used, else the preferred algorithm will be used.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">The password, and optionally the salt and algorithm, to hash.</param>
+        /// <returns>The hash, the salt used, and whether the algorithm is obsolete.</returns>
         IPasswordHashResult Hash(PasswordHashRequest request);
 
         /// <summary>
