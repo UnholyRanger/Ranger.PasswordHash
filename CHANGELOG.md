@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Generated salts were converted to text as UTF-8, which corrupts random bytes. A salt
   stored that way could not be loaded back, so the password would never validate.
+- `UseOnlyExternalAlgorithms()` skipped registering the default salt generator, so resolving
+  `IPasswordHash` threw unless a custom generator was registered.
 
 ## [2.0.0] - 2023-12-09
 

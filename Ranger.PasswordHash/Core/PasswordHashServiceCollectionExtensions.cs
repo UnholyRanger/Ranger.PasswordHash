@@ -24,13 +24,13 @@ namespace Ranger.PasswordHash
             services
                 .AddSingleton<IPasswordHash>(sp => new PasswordHashService(configuration, sp.GetRequiredService<IPasswordSaltGenerator>(), sp.GetServices<IPasswordHashAlgorithm>()));
 
+            services.TryAddSingleton<IPasswordSaltGenerator, PasswordSaltGenerator>();
+
             if (configuration.ExcludeInternalAlgorithms)
                 return services;
 
             if (configuration.PreferedAlgorithm is null)
                 configuration.SetPrefferedAlgorithm<PbkdfV2610k>();
-
-            services.TryAddSingleton<IPasswordSaltGenerator, PasswordSaltGenerator>();
 
             return services
                 .AddSingleton<IPasswordHashAlgorithm, Pbkdfv210k>()

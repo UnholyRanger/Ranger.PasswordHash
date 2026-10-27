@@ -67,6 +67,9 @@ namespace Ranger.PasswordHash.Tests.Algorithms
             // THEN the services are registered
             algorithms.Should().HaveCount(1)
                 .And.OnlyContain(a => a is Pbkdfv210k);
+
+            // AND the hashing service can be resolved with the default salt generator
+            sp.GetRequiredService<IPasswordHash>().Should().NotBeNull();
         }
     }
 }
