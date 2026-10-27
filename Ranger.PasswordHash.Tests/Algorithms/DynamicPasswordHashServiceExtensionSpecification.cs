@@ -53,6 +53,25 @@ namespace Ranger.PasswordHash.Tests.Algorithms
                 .Should().Be(PasswordVerifyResult.Success);
         }
 
+        [Fact(DisplayName = "GIVEN the obsolete misspelled preferred algorithm method WHEN hashing THEN expect it to still set the preferred algorithm.")]
+        public void Validate_Obsolete_SetPrefferedAlgorithm_Alias()
+        {
+            // GIVEN the old method name
+            _services.AddDynamicPasswordHashing(o =>
+            {
+#pragma warning disable CS0618 // Type or member is obsolete
+                o.SetPrefferedAlgorithm<Pbkdfv210k>();
+#pragma warning restore CS0618
+            });
+            var hashService = _services.BuildServiceProvider().GetRequiredService<IPasswordHash>();
+
+            // WHEN hashing without an algorithm ID
+            var result = hashService.Hash(new PasswordHashRequest { Password = "MySecurePassword" });
+
+            // THEN the configured algorithm is used
+            result.AlgorithmId.Should().Be("PBKDFv2-10k");
+        }
+
         [Fact(DisplayName = "GIVEN a preferred algorithm that is not registered WHEN resolving the hashing service THEN expect an exception.")]
         public void Validate_Unregistered_Preferred_Algorithm_Throws()
         {
@@ -60,7 +79,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
             _services.AddDynamicPasswordHashing(o =>
             {
                 o.UseOnlyExternalAlgorithms();
-                o.SetPrefferedAlgorithm<Pbkdfv210k>();
+                o.SetPreferredAlgorithm<Pbkdfv210k>();
             });
 
             // WHEN resolving the hashing service
@@ -70,7 +89,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
             action.Should().Throw<PasswordHashException>();
         }
 
-        [Fact(DisplayName = "GIVEN dynamic password hashing WHEN requesting password hash service with option to exlcude internal hashes THEN services are not registered.")]
+        [Fact(DisplayName = "GIVEN dynamic password hashing WHEN requesting password hash service with option to exclude internal hashes THEN services are not registered.")]
         public void Validate_Service_Registration_With_Action_NoInternalHashesLoaded()
         {
             // GIVEN registering services with the default configuration

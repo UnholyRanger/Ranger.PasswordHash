@@ -8,7 +8,7 @@ namespace Ranger.PasswordHash
     public static class PasswordHashServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the required services for using the <see cref="IPasswordHash"/> that will aids
+        /// Adds the required services for using the <see cref="IPasswordHash"/> that aids
         /// in dynamically hashing passwords. Use the options action to register any custom algorithms
         /// and override the default preferred algorithm.
         /// </summary>
@@ -29,8 +29,8 @@ namespace Ranger.PasswordHash
             if (configuration.ExcludeInternalAlgorithms)
                 return services;
 
-            if (configuration.PreferedAlgorithm is null)
-                configuration.SetPrefferedAlgorithm<PbkdfV2Sha256600k>();
+            if (configuration.PreferredAlgorithm is null)
+                configuration.SetPreferredAlgorithm<PbkdfV2Sha256600k>();
 
             return services
                 .AddSingleton<IPasswordHashAlgorithm, Pbkdfv210k>()

@@ -18,7 +18,7 @@ namespace Ranger.PasswordHash
         /// <summary>
         /// Gets the type of the preferred hashing algorithm.
         /// </summary>
-        internal Type? PreferedAlgorithm { get; private set; }
+        internal Type? PreferredAlgorithm { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether to load hash algorithms within this library.
@@ -26,10 +26,10 @@ namespace Ranger.PasswordHash
         internal bool ExcludeInternalAlgorithms { get; private set; } = false;
 
         /// <inheritdoc/>
-        public IPasswordHashConfiguration SetPrefferedAlgorithm<TIHashAlgorithm>()
+        public IPasswordHashConfiguration SetPreferredAlgorithm<TIHashAlgorithm>()
             where TIHashAlgorithm : class, IPasswordHashAlgorithm
         {
-            PreferedAlgorithm = typeof(TIHashAlgorithm);
+            PreferredAlgorithm = typeof(TIHashAlgorithm);
             return this;
         }
 

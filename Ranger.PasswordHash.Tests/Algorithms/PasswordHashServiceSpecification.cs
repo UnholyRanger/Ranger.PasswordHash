@@ -58,7 +58,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
             result.IsObsolete.Should().BeFalse();
         }
 
-        [Fact(DisplayName = "GIVEN algorithms are configured AND a preffered alrogithm is set WHEN requesting a hash without an ID THEN expect preferred algorithm used.")]
+        [Fact(DisplayName = "GIVEN algorithms are configured AND a preferred algorithm is set WHEN requesting a hash without an ID THEN expect preferred algorithm used.")]
         public void Given_RegisteredAlgorithms_WHEN_RequestingNonExistingSpecific_Expect_PreferredAlgorithm()
         {
             // GIVEN a default configuration
@@ -69,7 +69,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
             var algorithms = new IPasswordHashAlgorithm[] { new PreferredAlgorithm(), mockOtherAlgorithm.Object };
 
             // AND a preferred algorithm
-            configuration.SetPrefferedAlgorithm<PreferredAlgorithm>();
+            configuration.SetPreferredAlgorithm<PreferredAlgorithm>();
 
             var serviceUnderTest = GetTestService(configuration, algorithms);
 
@@ -84,7 +84,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
 
         }
 
-        [Fact(DisplayName = "GIVEN algorithms are configured AND a preffered alrogithm is set WHEN requesting a hash with an ID THEN expect algorithm used AND result is marked obsolete.")]
+        [Fact(DisplayName = "GIVEN algorithms are configured AND a preferred algorithm is set WHEN requesting a hash with an ID THEN expect algorithm used AND result is marked obsolete.")]
         public void Given_RegisteredAlgorithms_WHEN_RequestingExistingSpecific_Expect_ResultObsolete()
         {
             const string requestedAlgorithmId = "Mock_Algorithm";
@@ -101,7 +101,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
             var algorithms = new IPasswordHashAlgorithm[] { new PreferredAlgorithm(), mockOtherAlgorithm.Object };
 
             // AND a preferred algorithm
-            configuration.SetPrefferedAlgorithm<PreferredAlgorithm>();
+            configuration.SetPreferredAlgorithm<PreferredAlgorithm>();
 
             var serviceUnderTest = GetTestService(configuration, algorithms);
 
@@ -116,7 +116,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
             result.IsObsolete.Should().BeTrue();
         }
 
-        [Fact(DisplayName = "GIVEN no salt is defined in the request WHEN requesting a has THEN epect one to be generated and returned.")]
+        [Fact(DisplayName = "GIVEN no salt is defined in the request WHEN requesting a hash THEN expect one to be generated and returned.")]
         public void Given_NoSaltProvided_Expect_GenerateOne()
         {
             // GIVEN a default configuration
@@ -172,7 +172,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
             var configuration = new PasswordHashConfiguration(null);
 
             // AND a preferred algorithm
-            configuration.SetPrefferedAlgorithm<Pbkdfv210k>();
+            configuration.SetPreferredAlgorithm<Pbkdfv210k>();
 
             // AND no registered algorithms
             var algorithms = Array.Empty<IPasswordHashAlgorithm>();
@@ -195,7 +195,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
         {
             // GIVEN the 10k algorithm as preferred
             var configuration = new PasswordHashConfiguration(null);
-            configuration.SetPrefferedAlgorithm<Pbkdfv210k>();
+            configuration.SetPreferredAlgorithm<Pbkdfv210k>();
             var serviceUnderTest = GetTestService(configuration, new IPasswordHashAlgorithm[] { new Pbkdfv210k() });
 
             // WHEN verifying
@@ -210,7 +210,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
         {
             // GIVEN the 10k algorithm as preferred
             var configuration = new PasswordHashConfiguration(null);
-            configuration.SetPrefferedAlgorithm<Pbkdfv210k>();
+            configuration.SetPreferredAlgorithm<Pbkdfv210k>();
             var serviceUnderTest = GetTestService(configuration, new IPasswordHashAlgorithm[] { new Pbkdfv210k() });
 
             // WHEN verifying the wrong password
@@ -225,7 +225,7 @@ namespace Ranger.PasswordHash.Tests.Algorithms
         {
             // GIVEN a different preferred algorithm
             var configuration = new PasswordHashConfiguration(null);
-            configuration.SetPrefferedAlgorithm<PreferredAlgorithm>();
+            configuration.SetPreferredAlgorithm<PreferredAlgorithm>();
             var serviceUnderTest = GetTestService(configuration, new IPasswordHashAlgorithm[] { new PreferredAlgorithm(), new Pbkdfv210k() });
 
             // WHEN verifying a hash from the 10k algorithm

@@ -34,6 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the next time each user signs in. Both algorithms still produce the same hashes as before.
 - Resolving `IPasswordHash` now throws a `PasswordHashException` if the preferred algorithm is
   not registered, instead of failing later when hashing.
+- `SetPrefferedAlgorithm` is renamed to `SetPreferredAlgorithm`. The misspelled name still works
+  but is marked `[Obsolete]` and will be removed in a future version.
+- **Breaking:** `PasswordHashResult.AlgorithmId` and `Value` are now `init` only.
 
 ### Fixed
 
