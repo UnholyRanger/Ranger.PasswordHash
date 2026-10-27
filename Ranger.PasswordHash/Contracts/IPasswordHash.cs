@@ -13,5 +13,15 @@
         /// <param name="request"></param>
         /// <returns></returns>
         IPasswordHashResult Hash(PasswordHashRequest request);
+
+        /// <summary>
+        /// Verifies a password against a stored hash, using a fixed time comparison.
+        /// </summary>
+        /// <param name="password">The plain text password to check.</param>
+        /// <param name="hash">The stored <see cref="IPasswordHashResult.Value"/>.</param>
+        /// <param name="salt">The stored <see cref="IPasswordHashResult.Salt"/>.</param>
+        /// <param name="algorithmId">The stored <see cref="IPasswordHashResult.AlgorithmId"/>.</param>
+        /// <returns>Whether the password matches, and whether it should be rehashed.</returns>
+        PasswordVerifyResult Verify(string password, string hash, Salt salt, string algorithmId);
     }
 }

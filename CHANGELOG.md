@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.0.0] - Unreleased
 
+### Added
+
+- `IPasswordHash.Verify(password, hash, salt, algorithmId)`, which compares hashes in fixed
+  time and returns a `PasswordVerifyResult`: `Failed`, `Success` or `SuccessRehashNeeded`.
+
 ### Changed
 
 - **Breaking:** Targets .NET 10 only. Support for .NET 6 and .NET 8 has been dropped.

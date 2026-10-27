@@ -188,6 +188,68 @@ namespace Ranger.PasswordHash.Tests.Algorithms
 
         }
 
+        // Known PBKDFv2-10k vector, see PbkdfV2_10kSpecification
+        private const string knownPassword = "ThisIs$up3rSecure";
+        private const string knownSalt = "SecureSaltValue";
+        private const string knownHash = "LmEnvDWVxI+1i9RTWAlU+S2NucY=";
+
+        [Fact(DisplayName = "GIVEN a stored hash from the preferred algorithm WHEN verifying the correct password THEN expect success.")]
+        public void Given_PreferredHash_WHEN_VerifyingCorrectPassword_Expect_Success()
+        {
+            // GIVEN the 10k algorithm as preferred
+            var configuration = new PasswordHashConfiguration(null);
+            configuration.SetPrefferedAlgorithm<Pbkdfv210k>();
+            var serviceUnderTest = GetTestService(configuration, new IPasswordHashAlgorithm[] { new Pbkdfv210k() });
+
+            // WHEN verifying
+            var result = serviceUnderTest.Verify(knownPassword, knownHash, Salt.FromText(knownSalt), "PBKDFv2-10k");
+
+            // THEN it succeeds
+            result.Should().Be(PasswordVerifyResult.Success);
+        }
+
+        [Fact(DisplayName = "GIVEN a stored hash WHEN verifying the wrong password THEN expect failure.")]
+        public void Given_StoredHash_WHEN_VerifyingWrongPassword_Expect_Failed()
+        {
+            // GIVEN the 10k algorithm as preferred
+            var configuration = new PasswordHashConfiguration(null);
+            configuration.SetPrefferedAlgorithm<Pbkdfv210k>();
+            var serviceUnderTest = GetTestService(configuration, new IPasswordHashAlgorithm[] { new Pbkdfv210k() });
+
+            // WHEN verifying the wrong password
+            var result = serviceUnderTest.Verify("WrongPassword", knownHash, Salt.FromText(knownSalt), "PBKDFv2-10k");
+
+            // THEN it fails
+            result.Should().Be(PasswordVerifyResult.Failed);
+        }
+
+        [Fact(DisplayName = "GIVEN a stored hash from a non-preferred algorithm WHEN verifying the correct password THEN expect a rehash to be needed.")]
+        public void Given_NonPreferredHash_WHEN_VerifyingCorrectPassword_Expect_RehashNeeded()
+        {
+            // GIVEN a different preferred algorithm
+            var configuration = new PasswordHashConfiguration(null);
+            configuration.SetPrefferedAlgorithm<PreferredAlgorithm>();
+            var serviceUnderTest = GetTestService(configuration, new IPasswordHashAlgorithm[] { new PreferredAlgorithm(), new Pbkdfv210k() });
+
+            // WHEN verifying a hash from the 10k algorithm
+            var result = serviceUnderTest.Verify(knownPassword, knownHash, Salt.FromText(knownSalt), "PBKDFv2-10k");
+
+            // THEN it succeeds and asks for a rehash
+            result.Should().Be(PasswordVerifyResult.SuccessRehashNeeded);
+        }
+
+        [Theory(DisplayName = "GIVEN no algorithm ID WHEN verifying THEN expect an argument exception.")]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void Given_NoAlgorithmId_WHEN_Verifying_Expect_ArgumentException(string algorithmId)
+        {
+            var serviceUnderTest = GetTestService(new PasswordHashConfiguration(null), new IPasswordHashAlgorithm[] { new Pbkdfv210k() });
+
+            var action = () => serviceUnderTest.Verify(knownPassword, knownHash, Salt.FromText(knownSalt), algorithmId);
+
+            action.Should().Throw<ArgumentException>();
+        }
+
         private PasswordHashService GetTestService(PasswordHashConfiguration configuration, IEnumerable<IPasswordHashAlgorithm> algorithms)
             => new(configuration, _mockSaltGenerator.Object, algorithms);
     }

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace Ranger.PasswordHash
 {
@@ -46,6 +48,19 @@ namespace Ranger.PasswordHash
             hashResult.IsObsolete = GetPrefferedAlgorithm() is not null && GetPrefferedAlgorithm() != algorithm;
 
             return hashResult;
+        }
+
+        /// <inheritdoc/>
+        public PasswordVerifyResult Verify(string password, string hash, Salt salt, string algorithmId)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(algorithmId);
+
+            var result = Hash(new PasswordHashRequest { AlgorithmId = algorithmId, Password = password, Salt = salt });
+
+            if (!CryptographicOperations.FixedTimeEquals(result.Value.ConvertToBytes(), hash.ConvertToBytes()))
+                return PasswordVerifyResult.Failed;
+
+            return result.IsObsolete ? PasswordVerifyResult.SuccessRehashNeeded : PasswordVerifyResult.Success;
         }
 
         private IPasswordHashAlgorithm? RetrieveAlgorithm(string? algorithmId)
